@@ -5,7 +5,7 @@ import os
 import shutil
 import time
 
-def get_data(YEAR):
+def get_data(YEAR, fileName):
 
     START_YEAR = str(YEAR)
     START_MONTH = '1'
@@ -16,7 +16,9 @@ def get_data(YEAR):
     END_DAY = '31'
     END = END_MONTH + '/' + END_DAY + '/' + END_YEAR
 
-    data_url = f'https://www.marketwatch.com/investing/index/djia/download-data?startDate={START}&endDate={END}'
+    # data_url = f'https://www.marketwatch.com/investing/index/djia/download-data?startDate={START}&endDate={END}'
+    data_url = f'https://www.marketwatch.com/investing/index/nik/download-data?startDate={START}&endDate={END}&countryCode=jp'
+
     page = requests.get(data_url)
     soup = BeautifulSoup( page.content, 'html.parser')
     a_tag = soup.find_all('a', {'class': 'link link--csv m100'})
@@ -40,12 +42,12 @@ def get_data(YEAR):
     path, dirs, files = next(os.walk('/Users/tokyo/Downloads'))
     file = files[0]
     old_file = os.path.join(path, file)
-    file_new_name = 'dowdata' + '_' + END_YEAR
+    file_new_name = fileName + '_' + END_YEAR
     new_path = path + '/' + 'data' + '/' + f"{file_new_name}.csv"
     shutil.move(old_file, new_path)
 
 # get data for 21 years
 year = 2000
-while year < 2022:
-    get_data(year)
+while year < 2006:
+    get_data(year, 'nikkei')
     year += 1
